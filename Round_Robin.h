@@ -16,6 +16,7 @@ struct Job
     int arrivalTime;
     int serviceTime;
     int priority;
+    int OG_serviceTime;
 
 };
 

@@ -22,6 +22,7 @@ void enqueue(struct Job record, struct LinkedList *queue)
 
     temp->job.arrivalTime = record.arrivalTime;
     temp->job.serviceTime = record.serviceTime;
+    temp->job.OG_serviceTime = record.OG_serviceTime;
     temp->job.priority = record.priority;
  
 

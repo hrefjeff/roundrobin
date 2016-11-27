@@ -59,7 +59,7 @@ int main(int argc, char** argv)
           // If the job is done
           if(cpuTime <= 0)
           {
-              waitTime = clockTime - currentJob->job.arrivalTime - currentJob->job.serviceTime;
+              waitTime = clockTime - currentJob->job.arrivalTime - currentJob->job.OG_serviceTime;
               printf("Job %s is done! : arrived @ (%d) waited(%d) clock time(%d)\n", currentJob->job.name, currentJob->job.arrivalTime, waitTime,clockTime);
               cpuOccupied = false;
               timeLimit = timeQuantum;
@@ -79,6 +79,7 @@ int main(int argc, char** argv)
             }
             newJob.arrivalTime = currentJob->job.arrivalTime;
             newJob.serviceTime = currentJob->job.serviceTime - timeQuantum;
+            newJob.OG_serviceTime = currentJob->job.OG_serviceTime;
             newJob.priority = currentJob->job.priority;
             enqueue(newJob, &waitingQueue);
             
