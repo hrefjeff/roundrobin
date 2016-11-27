@@ -1,9 +1,9 @@
 // Eileen Drass
 // CS 420-01
 // Programming Assignment - Round Robin clock algorithm implementation
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "Round_Robin.h"
 
 //------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ void readFile(struct Job record[])
     else
     {
         // Storing items from file into an array of jobs.       
-        for(int i = 0; i < 3; i++)
+        for(int i = 0; i < 100; i++)
         {
             fscanf(filePtr, "%s %d %d %d", &record[i].name, 
                     &record[i].arrivalTime, &record[i].serviceTime, 

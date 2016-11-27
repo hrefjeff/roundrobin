@@ -7,7 +7,7 @@
 #include <string.h>
 #include "Round_Robin.h"
 
-const int SIZE = 3;
+const int SIZE = 100;
 
 //waitTime = clockTime - currentJob->arrivalTime - cpuTime;
 int main(int argc, char** argv) 
