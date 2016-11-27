@@ -10,102 +10,85 @@
 //waitTime = clockTime - currentJob->arrivalTime - cpuTime;
 int main(int argc, char** argv) 
 {
-    // Initializing clock variables...
-    bool cpuOccupied = false; // Whether or not a job is in progress
-    int  clockTime = 0; // Clock counter
-    int  cpuTime = 0; 
-    //int  cpuCount = 0; // number of jobs in CPU 
-    int  waitTime = 0; // how long for current job to wait in CPU
-    int  timeQuantum = 10;
-    int  timeLimit = timeQuantum;
-    
-    
-    // Blocking out space for waiting queue, current job, and jobs...
-    struct Node* currentJob; 
-    memset(&currentJob, '\0', sizeof(currentJob));
-    
-    struct LinkedList waitingQueue;
-    memset(&waitingQueue, '\0', sizeof(waitingQueue));
-    
-    struct Job record[3];
-    memset(&record, '\0', sizeof(record));
+  // Initializing clock variables...
+  bool cpuOccupied = false; // Whether or not a job is in progress
+  int  clockTime = 0; // Clock counter
+  int  cpuTime = 0; 
+  int  waitTime = 0; // how long for current job to wait in CPU
+  int  timeQuantum = 50;
+  int  timeLimit = timeQuantum;
 
-    // Read input from the file
-    readFile(record); 
+  // Blocking out space for waiting queue, current job, and jobs...
+  struct Node* currentJob; 
+  memset(&currentJob, '\0', sizeof(currentJob));
+  struct LinkedList waitingQueue;
+  memset(&waitingQueue, '\0', sizeof(waitingQueue));
+  struct Job record[3];
+  memset(&record, '\0', sizeof(record));
 
-    // Number of elements in array of jobs
-    int elements = sizeof record / sizeof record[0];
- 
-    
-    // Big clock loop  
-    do {
+  readFile(record); 
 
-        if (cpuOccupied == true)
-        {
-            timeLimit--;
-            cpuTime--; 
-            
-            // trying to see if the job needs to go to the back of the line
-            if(timeLimit == 0)
-            {
-              timeLimit = timeQuantum;
-              
-              //printf("Job returning to waiting queue: %s %d", currentJob->name, currentJob->serviceTime);
-              //printf("\n");
-              
-              // create a job 
-              struct Job newJob; 
-              memset(&newJob, '\0', sizeof(newJob));
-              
-              for(int i = 0; i < 4; i++)
-              {
-                newJob.name[i] = currentJob->job.name[i]; 
-              }
-              
-              newJob.arrivalTime = currentJob->job.arrivalTime;
-              newJob.serviceTime = currentJob->job.serviceTime - timeQuantum;
-              printf("Service Time: %d \n", newJob.serviceTime);
-              newJob.priority = currentJob->job.priority;
- 
-              enqueue(newJob, &waitingQueue); 
-              cpuOccupied = false;
-            }
-            
-            // If the job is done
-            if(cpuTime == 0)
-            {
-                printf("Testing: %s %d %d %d", currentJob->job.name, clockTime, currentJob->job.arrivalTime, currentJob->job.serviceTime); 
-                printf("\n");
-                waitTime = clockTime - currentJob->job.arrivalTime - currentJob->job.serviceTime;
-                printf("%s %d %d %d", currentJob->job.name, currentJob->job.arrivalTime, waitTime, 
-                        clockTime); 
-                printf("\n");
-                cpuOccupied = false; 
-                elements--; 
-            }    
-        
-        }
-        
-        for(int i = 0; i < 3; i++)
-        {
-            if(clockTime == record[i].arrivalTime)
-            {
-                enqueue(record[i], &waitingQueue);
-            }
-        }
-        
-        if((cpuOccupied == false) && (!isEmpty(&waitingQueue)))
-        { 
-            currentJob = dequeue(&waitingQueue);
-            cpuTime = currentJob->job.serviceTime--;
-            cpuOccupied = true;  
-        }
-        
+  int elements = sizeof record / sizeof record[0];
+
+
+  // Big clock loop  
+  do {
+
+      if (cpuOccupied == true)
+      {
+          timeLimit--;
+          cpuTime--; 
           
-        clockTime++; 
-       
-    } while ((!isEmpty(&waitingQueue)) || (cpuOccupied == true) || (elements > 0)); 
+          // trying to see if the job needs to go to the back of the line
+          if(timeLimit <= 0)
+          {
+            timeLimit = timeQuantum;
+            
+            struct Job newJob; 
+            memset(&newJob, '\0', sizeof(newJob));
+            
+            for(int i = 0; i < 4; i++)
+            {
+              newJob.name[i] = currentJob->job.name[i]; 
+            }
+            
+            newJob.arrivalTime = currentJob->job.arrivalTime;
+            newJob.serviceTime = currentJob->job.serviceTime - timeQuantum;
+            newJob.priority = currentJob->job.priority;
+            enqueue(newJob, &waitingQueue); 
+            cpuOccupied = false;
+          }
+          
+          // If the job is done
+          if(cpuTime <= 0)
+          {
+              waitTime = clockTime - currentJob->job.arrivalTime - currentJob->job.serviceTime;
+              printf("Job %s is done! : arrived @ (%d) waited(%d) clock time(%d)\n", currentJob->job.name, currentJob->job.arrivalTime, waitTime,clockTime);
+              cpuOccupied = false; 
+              elements--; 
+          }    
+      
+      }
+      
+      for(int i = 0; i < 3; i++)
+      {
+          if(clockTime == record[i].arrivalTime)
+          {
+              enqueue(record[i], &waitingQueue);
+          }
+      }
+      
+      if((cpuOccupied == false) && (!isEmpty(&waitingQueue)))
+      { 
+          currentJob = dequeue(&waitingQueue);
+          cpuTime = currentJob->job.serviceTime--;
+          cpuOccupied = true;  
+      }
+        
+      clockTime++; 
+     
+  } while ((!isEmpty(&waitingQueue)) || (cpuOccupied == true) || (elements > 0)); 
 
- 
-    return (EXIT_SUCCESS);
+
+  return (EXIT_SUCCESS);
 }
