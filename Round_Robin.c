@@ -18,12 +18,12 @@ void enqueue(struct Job record, struct LinkedList *queue)
 
     for(int i = 0; i < 4; i++)
     {
-       temp->name[i] = record.name[i]; 
+       temp->job.name[i] = record.name[i]; 
     }
 
-    temp->arrivalTime = record.arrivalTime;
-    temp->serviceTime = record.serviceTime;
-    temp->priority = record.priority;
+    temp->job.arrivalTime = record.arrivalTime;
+    temp->job.serviceTime = record.serviceTime;
+    temp->job.priority = record.priority;
  
 
     temp->next = NULL; 
@@ -121,7 +121,7 @@ void outputFile(struct Node* currentJob, int waitTime, int clockTime)
     
     filePtr = fopen("output.txt", "a");
     
-    fprintf(filePtr, "%s %d %d %d", currentJob->name, currentJob->arrivalTime,  
+    fprintf(filePtr, "%s %d %d %d", currentJob->job.name, currentJob->job.arrivalTime,  
              waitTime, clockTime);
     
     fprintf(filePtr, "\n");
@@ -156,8 +156,8 @@ void print_queue(struct LinkedList* queue)
     
     while(ptr != NULL)
     {
-        printf("%s %d %d %d", ptr->name, ptr->arrivalTime, 
-                  ptr->serviceTime, ptr->priority); 
+        printf("%s %d %d %d", ptr->job.name, ptr->job.arrivalTime, 
+                  ptr->job.serviceTime, ptr->job.priority); 
         printf("\n");
         ptr = ptr->next;
     }

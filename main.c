@@ -43,6 +43,7 @@ int main(int argc, char** argv)
         if (cpuOccupied == true)
         {
             timeLimit--;
+            cpuTime--; 
             
             // trying to see if the job needs to go to the back of the line
             if(timeLimit == 0)
@@ -58,13 +59,13 @@ int main(int argc, char** argv)
               
               for(int i = 0; i < 4; i++)
               {
-                newJob.name[i] = currentJob->Job->name[i]; 
+                newJob.name[i] = currentJob->job.name[i]; 
               }
               
-              newJob.arrivalTime = currentJob->arrivalTime;
-              newJob.serviceTime = currentJob->serviceTime - timeQuantum;
+              newJob.arrivalTime = currentJob->job.arrivalTime;
+              newJob.serviceTime = currentJob->job.serviceTime - timeQuantum;
               printf("Service Time: %d \n", newJob.serviceTime);
-              newJob.priority = currentJob->priority;
+              newJob.priority = currentJob->job.priority;
  
               enqueue(newJob, &waitingQueue); 
               cpuOccupied = false;
@@ -73,10 +74,10 @@ int main(int argc, char** argv)
             // If the job is done
             if(cpuTime == 0)
             {
-                printf("Testing: %s %d %d %d", currentJob->name, clockTime, currentJob->arrivalTime, currentJob->serviceTime); 
+                printf("Testing: %s %d %d %d", currentJob->job.name, clockTime, currentJob->job.arrivalTime, currentJob->job.serviceTime); 
                 printf("\n");
-                waitTime = clockTime - currentJob->arrivalTime - currentJob->serviceTime;
-                printf("%s %d %d %d", currentJob->name, currentJob->arrivalTime, waitTime, 
+                waitTime = clockTime - currentJob->job.arrivalTime - currentJob->job.serviceTime;
+                printf("%s %d %d %d", currentJob->job.name, currentJob->job.arrivalTime, waitTime, 
                         clockTime); 
                 printf("\n");
                 cpuOccupied = false; 
@@ -90,19 +91,13 @@ int main(int argc, char** argv)
             if(clockTime == record[i].arrivalTime)
             {
                 enqueue(record[i], &waitingQueue);
-               // elements--;
             }
-        }
-        
-        if (cpuOccupied == true)
-        {
-            cpuTime--; 
         }
         
         if((cpuOccupied == false) && (!isEmpty(&waitingQueue)))
         { 
             currentJob = dequeue(&waitingQueue);
-            cpuTime = currentJob->serviceTime--;
+            cpuTime = currentJob->job.serviceTime--;
             cpuOccupied = true;  
         }
         

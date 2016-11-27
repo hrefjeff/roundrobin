@@ -21,7 +21,7 @@ struct Job
 
 struct Node 
 {
-    struct Job; 
+    struct Job job; 
     struct Node* next;
 };
 
