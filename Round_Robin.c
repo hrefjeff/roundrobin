@@ -145,6 +145,7 @@ bool isEmpty(struct LinkedList *queue)
         return false;
     }
 }
+
 //------------------------------------------------------------------------------
 // This function will print the queue. Its parameters include the queue which
 // needs to be printed.
