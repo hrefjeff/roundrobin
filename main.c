@@ -4,8 +4,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include<string.h>
+#include <string.h>
 #include "Round_Robin.h"
+
+const int SIZE = 3;
 
 //waitTime = clockTime - currentJob->arrivalTime - cpuTime;
 int main(int argc, char** argv) 
@@ -15,7 +17,7 @@ int main(int argc, char** argv)
   int  clockTime = 0; // Clock counter
   int  cpuTime = 0; 
   int  waitTime = 0; // how long for current job to wait in CPU
-  int  timeQuantum = 50;
+  int  timeQuantum = 10;
   int  timeLimit = timeQuantum;
 
   // Blocking out space for waiting queue, current job, and jobs...
@@ -23,7 +25,7 @@ int main(int argc, char** argv)
   memset(&currentJob, '\0', sizeof(currentJob));
   struct LinkedList waitingQueue;
   memset(&waitingQueue, '\0', sizeof(waitingQueue));
-  struct Job record[3];
+  struct Job record[SIZE];
   memset(&record, '\0', sizeof(record));
 
   readFile(record); 
@@ -34,7 +36,7 @@ int main(int argc, char** argv)
   // Big clock loop  
   do {
 
-      for(int i = 0; i < 3; i++)
+      for(int i = 0; i < SIZE; i++)
       {
           if(clockTime == record[i].arrivalTime)
           {
@@ -62,10 +64,10 @@ int main(int argc, char** argv)
               cpuOccupied = false;
               timeLimit = timeQuantum;
               elements--; 
-          }    
+          }
           
           // trying to see if the job needs to go to the back of the line
-          if((timeLimit <= 0) && (cpuOccupied == true) && isEmpty(&waitingQueue))
+          if((timeLimit <= 0) && (cpuOccupied == true) && !isEmpty(&waitingQueue))
           {
             timeLimit = timeQuantum;
             
@@ -78,18 +80,15 @@ int main(int argc, char** argv)
             newJob.arrivalTime = currentJob->job.arrivalTime;
             newJob.serviceTime = currentJob->job.serviceTime - timeQuantum;
             newJob.priority = currentJob->job.priority;
-            enqueue(newJob, &waitingQueue); 
+            enqueue(newJob, &waitingQueue);
             
             cpuOccupied = false;
           
-          } else {
+          } else if ((timeLimit <= 0) && isEmpty(&waitingQueue)) {
 
             timeLimit = timeQuantum;
 
           }
-
-          
-      
       }
         
       clockTime++;
