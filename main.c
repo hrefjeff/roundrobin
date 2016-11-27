@@ -40,6 +40,7 @@ int main(int argc, char** argv)
       {
           if(clockTime == record[i].arrivalTime)
           {
+              record[i].OG_serviceTime = record[i].serviceTime;
               enqueue(record[i], &waitingQueue);
           }
       }
